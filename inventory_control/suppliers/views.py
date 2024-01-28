@@ -20,7 +20,7 @@ def index(request):
     
     context = {"suppliers": page_obj}
     
-    return render(request, "index.html", context)
+    return render(request, "suppliers/index.html", context)
 
 def search(request):
     #Obtendo o valor da requisição (Formulário)
@@ -43,7 +43,7 @@ def search(request):
     
     context = { "suppliers": page_obj }
     
-    return render(request, "index.html", context)
+    return render(request, "suppliers/index.html", context)
     
 def create(request):
     form_action = reverse("suppliers:create")
@@ -64,7 +64,7 @@ def create(request):
             "form_action": form_action
             }
         
-        return render(request, "create.html", context)
+        return render(request, "suppliers/create.html", context)
     
     #GET
     form = SupplierForm()
@@ -74,7 +74,7 @@ def create(request):
         "form_action": form_action
     }
         
-    return render(request, "create.html", context)
+    return render(request, "suppliers/create.html", context)
 
 def update(request, slug):
     supplier = get_object_or_404(Supplier, slug=slug)
@@ -93,7 +93,7 @@ def update(request, slug):
             "form_action": form_action,
             "form": form,
         }
-        return render(request, "create.html", context)
+        return render(request, "suppliers/create.html", context)
 
     #GET
     form = SupplierForm(instance=supplier)
@@ -102,7 +102,7 @@ def update(request, slug):
         "form": form,
     }
     
-    return render(request, "create.html", context)
+    return render(request, "suppliers/create.html", context)
     
 
 @require_POST
