@@ -12,4 +12,7 @@ jQuery(function() {
         }
     });
 
+    // Habilitar os toasts de notificação
+    $(".toast").toast("show");
+    
 });

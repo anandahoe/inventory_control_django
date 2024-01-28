@@ -34,11 +34,11 @@ class Supplier(models.Model):
         "TO": "Tocantis",
     }
     
-    company_name = models.CharField(max_length=255)
+    company_name = models.CharField(max_length=255, unique=True)
     fantasy_name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(unique=True, blank=True)
     representative = models.CharField(max_length=255)
-    cnpj = models.CharField(max_length=20)
+    cnpj = models.CharField(max_length=20, unique=True)
     email= models.EmailField(unique=True)
     zipcode= models.CharField(max_length=20)
     street= models.CharField(max_length=255)
