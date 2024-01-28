@@ -13,7 +13,7 @@ def index(request):
     products = Product.objects.order_by("-id")
     
     #Aplicando a paginação
-    paginator = Paginator(products, 2)
+    paginator = Paginator(products, 100)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     
@@ -35,7 +35,7 @@ def search(request):
         .filter(name__icontains=search_value)\
         .order_by("-id")
     
-    paginator = Paginator(products, 2)
+    paginator = Paginator(products, 100)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     
@@ -48,7 +48,7 @@ def create(request):
     form_action = reverse("products:create")
     #POST
     if request.method == 'POST':
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, request.FILES)
         
         if form.is_valid():
             form.save()
@@ -81,11 +81,14 @@ def update(request, slug):
     
     #POST
     if request.method == "POST":
-        form = ProductForm(request.POST, instance=product)
+        form = ProductForm(request.POST, request.FILES, instance=product)
         
         if form.is_valid():
+            if form.cleaned_data["photo"] is False:
+                product.thumbnail.delete(save=False)
+                
             form.save()
-            messages.success(request, "Produto tualizado com sucesso!")
+            messages.success(request, "Produto atualizado com sucesso!")
             return redirect("products:index")
         
         context= {
