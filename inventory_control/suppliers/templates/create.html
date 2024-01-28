@@ -6,10 +6,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{% static 'suppliers/js/createUpdate.js' %}"></script>
 {% endblock %}
-
 {% block content %}
-    <h2 class="mb-3">Cadastro de Fornecedores</h2>
-    <form action="{% url 'suppliers:create' %}" method="post">
+{% comment %} {% with create_url="/fornecedores/cadastro" %} {% endcomment %}
+    {% url "suppliers:create" as url_page %}
+
+    {% if form_action == url_page %}
+        <h2 class="mb-3">Cadastro de Fornecedores</h2>
+    {% else %}
+        <h2 class="mb-3">Edição de Fornecedor</h2>
+    {% endif %}
+
+    <form action="{{ form_action }}" method="post">
         {% csrf_token %}
         <div class="row mb-3">
             <div class="cl-md-6">
@@ -207,8 +214,22 @@
                 {% endif %}
             </div>
         </div>
+
+<!--Mostrando o checkbox ativo apenas quando for a página de edição-->
+        {% if form_action != url_page %}
+        <div class="row mb-3">
+            <div class="col">
+                <div class="form-check">
+                    <input type="checkbox" id="enabledCheckbox" name="enabled" {% if form.enabled.value %}checked{% endif %}class="form-check-input">
+                    <label for="enabledCheckbox">Ativo</label>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <div class="d-grid">
             <button class="btn btn-primary btn-lg">Salvar</button>
         </div>
     </form>
+{% comment %} {% endwith %} {% endcomment %}
 {% endblock  %}
