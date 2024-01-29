@@ -35,6 +35,7 @@
                 <th>ID</th>
                 <th>Foto</th>
                 <th>Nome</th>
+                <th>Categoria</th>
                 <th>Preço de venda</th>
                 <th>Data de expiração</th>
                 <th>Ativo</th>
@@ -43,7 +44,7 @@
             <tbody>
                 {% for product in products %}
                 <tr>
-                    <td>{{product.id}}</td>
+                    <td>{{ product.id }}</td>
                     <td>
                         {% if product.thumbnail %}
                             <img src="{{ product.thumbnail.url }}"  height="30" width="30" alt="{{product.name}}" class="img-fluid rounded"/>
@@ -51,11 +52,12 @@
                             Sem foto
                         {% endif %}
                     </td>
-                    <td>{{product.name | title | truncatechars:20 }}</td>
+                    <td>{{ product.name | title | truncatechars:20 }}</td>
+                    <td>{{ product.category.name | title | default:"Sem categoria"}}</td>
                     <td>RS {{product.sale_price | floatformat:2 }}</td>
                     <td>
                         {% if product.is_perishable %}
-                            {{product.expiration_date | date:"d/m/Y" }}
+                            {{ product.expiration_date | date:"d/m/Y" }}
                         {% else %}
                         Não perecível
                         {% endif %}

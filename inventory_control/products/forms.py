@@ -13,6 +13,7 @@ class ProductForm(forms.ModelForm):
             "expiration_date": "Data de expiração",
             "photo": "Imagem do Produto",
             "enabled": "Ativo",
+            "category": "Categoria"
         }
         
         error_messages = {
@@ -29,5 +30,5 @@ class ProductForm(forms.ModelForm):
         }
         
         widgets = {
-            "expiration_date": forms.DateInput(attrs={"type":"date"})
+            "expiration_date": forms.DateInput(attrs={"type":"date"}, format="%Y-%m-%d")
         }

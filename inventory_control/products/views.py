@@ -31,8 +31,8 @@ def search(request):
     
      #Filtando os fornecedores
      # O Q é usando para combinar filtros (& ou |) - (and ou or)
-    products = Product.objects\
-        .filter(name__icontains=search_value)\
+    products = Product.objects \
+        .filter(Q(name__icontains=search_value) | Q(category__name__icontains=search_value)) \
         .order_by("-id")
     
     paginator = Paginator(products, 100)

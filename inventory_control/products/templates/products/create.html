@@ -29,17 +29,27 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col md-6">
+            <div class="col md-4">
+                {{ form.category | as_crispy_field }}
+            </div>
+            <div class="col md-4">
                 {{ form.sale_price | as_crispy_field }}
             </div>
-            <div class="col md-6">
+            <div class="col md-4">
                 {{ form.expiration_date | as_crispy_field }}
             </div>
+            
         </div>
 
         <div class="row mb-3">
             <div class="col">
                 {{ form.photo | as_crispy_field }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                {{ form.enabled | as_crispy_field }}
             </div>
         </div>
 
