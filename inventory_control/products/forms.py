@@ -66,3 +66,4 @@ SupplierProductFormSet = forms.inlineformset_factory(
     can_delete=True,
     max_num=1
 )
+

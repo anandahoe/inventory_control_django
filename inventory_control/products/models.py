@@ -107,3 +107,4 @@ class SupplierProduct(models.Model):
         verbose_name = "Fornecedor do Produto"
         verbose_name_plural = "Fornecedores do Produto"
         unique_together = [["supplier", "product"]]        
+        

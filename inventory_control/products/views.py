@@ -1,13 +1,14 @@
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db import IntegrityError
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 
 from .forms import CategoryForm, ProductForm, SupplierProductFormSet
-from .models import Category, Product
+from .models import Category, Product, SupplierProduct
 
 
 def index(request):
@@ -95,17 +96,46 @@ def update(request, slug):
     # POST
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES, instance=product)
+        supplier_product_formset = SupplierProductFormSet(request.POST, instance=product)
         
         if form.is_valid():
             if form.cleaned_data["photo"] is False:
                 product.thumbnail.delete(save=False)
             
-            form.save()            
-            messages.success(request, "Produto atualizado com sucesso")            
-            return redirect("products:index")
+            form.save()    
+            
+            try:
+                if supplier_product_formset.is_valid():
+                    supplier_product_formset.save()                            
+                    messages.success(request, "O produto foi atualizado com sucesso!")
+                    return redirect("products:index")
+                else:
+                    messages.error(request, "Não é possível atualizar o produto. Verifique os campos de fornecedor")
+                    
+                    supplier_product_formset = SupplierProductFormSet(instance=product)
+                    
+                    context = { 
+                        "form": form,
+                        "supplier_product_formset": supplier_product_formset,
+                        "form_action": form_action
+                    }
+                    
+                    return render(request, "products/create.html", context)
+            except IntegrityError:
+                messages.error(request, "Não é possível cadastrar o mesmo fornecedor para o mesmo produto")
+                
+                context = { 
+                    "form": form,
+                    "supplier_product_formset": supplier_product_formset,
+                    "form_action": form_action
+                }
+                
+                return render(request, "products/create.html", context)
+            
         
         context = {
             "form_action": form_action,
+            "supplier_product_formset": supplier_product_formset,
             "form": form
         }
         
@@ -113,11 +143,11 @@ def update(request, slug):
     
     # GET
     form = ProductForm(instance=product)
-    
-    print(product.expiration_date)
+    supplier_product_formset = SupplierProductFormSet(instance=product)
     
     context = {
         "form_action": form_action,
+        "supplier_product_formset": supplier_product_formset,
         "form": form,
     }
     
@@ -238,3 +268,16 @@ def delete_category(request, id):
     category.delete()
     
     return redirect("products:categories")
+
+@require_GET
+def get_suppliers_from_product(request, id):
+    suppliers = SupplierProduct.objects.filter(product__id=id).order_by("-id")
+    
+    #Serialização
+    suppliers_serialized = [{
+        "id": supplierProduct.id,
+        "name": supplierProduct.supplier.fantasy_name,
+        "cost_price": supplierProduct.cost_price
+    } for supplierProduct in suppliers]
+    
+    return JsonResponse(suppliers_serialized, safe=False)

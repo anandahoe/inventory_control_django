@@ -1,6 +1,7 @@
-jQuery(function(){
+jQuery(function() {
     const $modal = $("#suppliersModal");
-    $modal.on ("shown.bs.modal", function(e){
+
+    $modal.on("show.bs.modal", function(e) {
         const $button = $(e.relatedTarget);
 
         const url = $button.data("url");
@@ -13,13 +14,12 @@ jQuery(function(){
 
                 suppliers.forEach(supplier => {
                     const $row = $("<tr></tr>");
-                    $row.append(("<td>").text(supplier.name));
-                    $row.append(("<td>").text(supplier.cost_price));
+                    $row.append($("<td>").text(supplier.name));
+                    $row.append($("<td>").text(supplier.cost_price));
 
                     $suppliersTableBody.append($row);
                 })
             })
             .catch(console.error)
     });
-    
 });
