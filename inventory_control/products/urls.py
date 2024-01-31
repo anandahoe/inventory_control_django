@@ -13,6 +13,7 @@ urlpatterns = [
     path("category/<int:id>/delete", views.delete_category, name="category_delete"),
     path("category/search", views.search_categories, name="categories_search"),
     path("categorias/<slug:slug>/", views.update_category, name="category_update"),
+    path("<int:id>/delete_supplier", views.delete_supplier_from_product, name="delete_supplier"),
     path("<slug:slug>/", views.update, name="update"),
     path("<int:id>/suppliers", views.get_suppliers_from_product, name="suppliers"),
 ]
